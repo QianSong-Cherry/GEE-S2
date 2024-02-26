@@ -40,7 +40,7 @@ Step b: load the necessary functions
 var batch = require('users/fitoprincipe/geetools:batch')
 var GuanMethod = require("users/GHX/share:function_Library.js")
 ```
-Step c: to mask-out clouds
+Step c: mask-out clouds
 ```
 function maskS2clouds(image){
   var qa = image.select("QA60");
@@ -65,7 +65,7 @@ var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
                   .filterBounds(roi); 
 ```
 You can change the date range that you want to get a mosaic of Sentinel-2 image over the ROI. 
-Set the 'CLOUDY_PIXEL_PERCENTAGE' as the rate of cloud coverage.
+Set the `CLOUDY_PIXEL_PERCENTAGE` as the rate of cloud coverage.
 Step e: get a mosaic
 ```
 var S2Dataset = GuanMethod.ic_Mosaic_sameDate(dataset)
