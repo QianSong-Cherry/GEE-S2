@@ -66,6 +66,7 @@ var dataset = ee.ImageCollection('COPERNICUS/S2_HARMONIZED')
 ```
 You can change the date range that you want to get a mosaic of Sentinel-2 image over the ROI. 
 Set the `CLOUDY_PIXEL_PERCENTAGE` as the rate of cloud coverage.
+
 Step e: save the data to your Google drive folder
 ```
 Export.image.toDrive({
