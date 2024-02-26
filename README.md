@@ -51,33 +51,29 @@ function maskS2clouds(image){
   var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
                .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
   
-  return image.updateMask(mask)
+  return image.updateMask(mask).divide(10000)
          
               .set('system:time_start', image.get('system:time_start'));
 }
 ```
 Step d: collect Sentinel-2 data
 ```
-var dataset = ee.ImageCollection('COPERNICUS/S2_SR') 
+var dataset = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') 
                   .filterDate('2020-08-01', '2020-08-30')
-                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20)) 
+                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',5)) 
                   .map(maskS2clouds)
                   .filterBounds(roi); 
 ```
 You can change the date range that you want to get a mosaic of Sentinel-2 image over the ROI. 
 Set the `CLOUDY_PIXEL_PERCENTAGE` as the rate of cloud coverage.
-Step e: get a mosaic
+Step e: save the data to your Google drive folder
 ```
-var S2Dataset = GuanMethod.ic_Mosaic_sameDate(dataset)
-                          .map(function(image){
-                            return image.clip(roi)
-                          })
-```
-Step f: save the data to Google drive
-```
-batch.Download.ImageCollection.toDrive(S2Dataset,"result", {
-scale: 10,
-region: roi,          
-maxPixels:34e10,          
-type:"int16" });
+Export.image.toDrive({
+  image: dataset.mean(),
+  description: 'bayern-2015-5-8',
+  folder: 'bayern-forest/2015-5-8',
+  scale: 10,
+  region: roi,
+  maxPixels:34e10
+});
 ```
